@@ -1,4 +1,5 @@
 from initfile import * 
+import cv2
 
 # Convert width height to a point in a rectangle
 def getRectangle(faceDictionary):
@@ -43,6 +44,31 @@ def path2img(img_url, subfolder=''):
 	image_array = glob.glob(os.path.join(IMAGES_FOLDER, subfolder, img_url))
 	image = open(image_array[0], 'r+b')
 	return image
+	
+def livepreview():
+	cv2.namedWindow("preview")
+	vc = cv2.VideoCapture(0)
+
+	if vc.isOpened(): # try to get the first frame
+		rval, frame = vc.read()
+		detected_faces = face_url(frame, is_url=False) # detect face and attributes
+		#plot_faces(frame, detected_faces, is_url=False)
+	else:
+		rval = False
+
+	'''
+	while rval:
+		#detected_faces = face_url(frame, is_url=False) # detect face and attributes
+		#plot_faces(frame, detected_faces, is_url=False)
+		cv2.imshow("preview", frame)
+		rval, frame = vc.read()
+		key = cv2.waitKey(20)
+		if key == 27: # exit on ESC
+			break
+	cv2.destroyWindow("preview")
+	'''
+
+
 
 ############
 ### MAIN ###
@@ -63,3 +89,6 @@ if True:
 	#img_url = 'president-family-portrait-closeup.jpg'
 	detected_faces = face_url(image, is_url=False) # detect face and attributes
 	plot_faces(image, detected_faces, is_url=False)
+	
+if False:
+	livepreview()
